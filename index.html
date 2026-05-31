@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>初回相談ヒアリングシート生成ツール</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <p class="eyebrow">初回相談前の整理ツール</p>
+      <h1>初回相談ヒアリングシート生成ツール</h1>
+      <p class="lead">
+        小規模事業者や個人事業主との初回相談前に、聞くべき質問、確認事項、次回アクションを整理します。
+      </p>
+    </div>
+  </header>
+
+  <main class="container main-layout">
+    <section class="panel input-panel" aria-labelledby="input-heading">
+      <div class="section-heading">
+        <p class="section-kicker">入力エリア</p>
+        <h2 id="input-heading">相談内容を整理する</h2>
+      </div>
+
+      <p class="notice">
+        氏名、住所、電話番号、メールアドレス、口座情報、契約先名、詳細な売上などは、必要以上に入力しないでください。
+      </p>
+
+      <form id="hearingForm">
+        <div class="field">
+          <label for="theme">相談テーマ</label>
+          <input
+            type="text"
+            id="theme"
+            name="theme"
+            placeholder="例：AIを仕事に使いたい、LPを作りたい、SNS発信を整理したい"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="business">事業・活動の概要</label>
+          <textarea
+            id="business"
+            name="business"
+            rows="4"
+            placeholder="例：地域の美容室、個人で写真撮影をしている、整体院を運営している"
+            required
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <label for="problem">今困っていること</label>
+          <textarea
+            id="problem"
+            name="problem"
+            rows="5"
+            placeholder="例：何から相談すればよいか分からない、SNS投稿が続かない、サービスの魅力が伝わらない"
+            required
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <label for="support">希望する支援内容</label>
+          <textarea
+            id="support"
+            name="support"
+            rows="4"
+            placeholder="例：使えるAI活用方法を知りたい、LP構成を整理したい、投稿テーマを一緒に考えたい"
+            required
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <label for="consultationType">相談の種類</label>
+          <select id="consultationType" name="consultationType" required>
+            <option value="">選択してください</option>
+            <option value="AI活用相談">AI活用相談</option>
+            <option value="LP・Web制作相談">LP・Web制作相談</option>
+            <option value="SNS発信相談">SNS発信相談</option>
+            <option value="業務整理・効率化相談">業務整理・効率化相談</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+
+        <div class="button-row">
+          <button type="submit" class="primary-button">ヒアリングシートを作成する</button>
+          <button type="reset" class="secondary-button">入力をクリアする</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel output-panel" id="resultSection" aria-labelledby="result-heading">
+      <div class="section-heading">
+        <p class="section-kicker">出力エリア</p>
+        <h2 id="result-heading">生成結果</h2>
+      </div>
+
+      <div id="emptyState" class="empty-state">
+        左の入力欄に相談内容を入れて、ヒアリングシートを作成してください。
+      </div>
+
+      <div id="resultContent" class="result-content" hidden>
+        <div class="result-summary" aria-labelledby="summary-heading">
+          <h3 id="summary-heading">相談内容の整理</h3>
+          <dl>
+            <div>
+              <dt>相談テーマ</dt>
+              <dd id="summaryTheme"></dd>
+            </div>
+            <div>
+              <dt>相談の種類</dt>
+              <dd id="summaryType"></dd>
+            </div>
+            <div>
+              <dt>事業・活動の概要</dt>
+              <dd id="summaryBusiness"></dd>
+            </div>
+            <div>
+              <dt>今困っていること</dt>
+              <dd id="summaryProblem"></dd>
+            </div>
+            <div>
+              <dt>希望する支援内容</dt>
+              <dd id="summarySupport"></dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="result-block">
+          <h3>質問リスト</h3>
+          <ul id="questionList"></ul>
+        </div>
+
+        <div class="result-block">
+          <h3>確認事項</h3>
+          <ul id="checkList"></ul>
+        </div>
+
+        <div class="result-block">
+          <h3>次回アクション</h3>
+          <ul id="actionList"></ul>
+        </div>
+
+        <div class="result-block" id="expertBlock" hidden>
+          <h3>専門家に確認する項目</h3>
+          <ul id="expertList"></ul>
+        </div>
+
+        <div class="copy-area">
+          <button type="button" id="copyButton" class="primary-button">生成結果をコピーする</button>
+          <p id="copyMessage" class="copy-message" role="status" aria-live="polite"></p>
+          <p class="small-note">
+            コピー・共有する前に、個人情報や機密情報が含まれていないか確認してください。
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>
+        このツールは初回相談前の整理を補助するものです。医療、法律、税務、労務、投資、許認可などの専門判断は、必ず専門家に確認してください。
+      </p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

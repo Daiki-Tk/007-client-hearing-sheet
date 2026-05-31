@@ -1,0 +1,22 @@
+# OS / editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+
+# Local logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# Dependency and build folders, if they are created later
+node_modules/
+dist/
+build/
+publish/
+out/
+.git-codex-blocked/
+
+# Local environment files
+.env
+.env.*
