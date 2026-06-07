@@ -74,6 +74,7 @@
 - `style.css`: 見た目
 - `script.js`: ヒアリングシート生成とコピー機能
 - `README.md`: 概要、使い方、注意点
+- `TEST_CHECKLIST.md`: 手動テストチェックリスト
 
 ## 公開前の動作確認手順
 

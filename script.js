@@ -95,18 +95,28 @@ const expertKeywords = [
   "補助金"
 ];
 
+const commonQuestionBuilders = [
+  (data) => `「${data.theme}」について、今回の相談で一番整理したいことを聞いてみる`,
+  (data) => `「${data.business}」の現在の状況と、相談に至ったきっかけを確認する`,
+  (data) => `「${data.problem}」について、特に困っている場面を聞いてみる`,
+  (data) => `「${data.support}」に近づくために、最初に試したいことを整理する`
+];
+
+const commonChecks = [
+  "相談で扱う範囲と、今回は扱わない範囲",
+  "公開してよい情報と、伏せるべき情報"
+];
+
+const commonActions = [
+  "相談内容を短いメモにまとめ、初回相談で確認する",
+  "必要な資料や参考ページを、公開してよい範囲で用意する",
+  "次回までに確認することを3つ以内に絞る"
+];
+
 form.addEventListener("submit", (event) => {
   event.preventDefault();
 
-  const formData = new FormData(form);
-  const data = {
-    theme: cleanText(formData.get("theme")),
-    business: cleanText(formData.get("business")),
-    problem: cleanText(formData.get("problem")),
-    support: cleanText(formData.get("support")),
-    consultationType: cleanText(formData.get("consultationType"))
-  };
-
+  const data = getFormData();
   const sheet = buildHearingSheet(data);
   renderSheet(data, sheet);
   latestSheetText = buildCopyText(data, sheet);
@@ -136,13 +146,20 @@ copyButton.addEventListener("click", async () => {
     : "コピーできませんでした。結果を選択して手動でコピーしてください。";
 });
 
+function getFormData() {
+  const formData = new FormData(form);
+
+  return {
+    theme: cleanText(formData.get("theme")),
+    business: cleanText(formData.get("business")),
+    problem: cleanText(formData.get("problem")),
+    support: cleanText(formData.get("support")),
+    consultationType: cleanText(formData.get("consultationType"))
+  };
+}
+
 function buildHearingSheet(data) {
-  const commonQuestions = [
-    `「${data.theme}」について、今回の相談で一番整理したいことを聞いてみる`,
-    `「${data.business}」の現在の状況と、相談に至ったきっかけを確認する`,
-    `「${data.problem}」について、特に困っている場面を聞いてみる`,
-    `「${data.support}」に近づくために、最初に試したいことを整理する`
-  ];
+  const commonQuestions = commonQuestionBuilders.map((buildQuestion) => buildQuestion(data));
 
   const questions = uniqueItems([
     ...commonQuestions,
@@ -150,16 +167,9 @@ function buildHearingSheet(data) {
   ]).slice(0, 7);
 
   const checks = uniqueItems([
-    "相談で扱う範囲と、今回は扱わない範囲",
-    "公開してよい情報と、伏せるべき情報",
+    ...commonChecks,
     ...(typeChecks[data.consultationType] || typeChecks["その他"])
   ]).slice(0, 5);
-
-  const actions = [
-    "相談内容を短いメモにまとめ、初回相談で確認する",
-    "必要な資料や参考ページを、公開してよい範囲で用意する",
-    "次回までに確認することを3つ以内に絞る"
-  ];
 
   const expertItems = needsExpertCheck(data)
     ? [
@@ -171,7 +181,7 @@ function buildHearingSheet(data) {
   return {
     questions,
     checks,
-    actions,
+    actions: commonActions,
     expertItems
   };
 }
