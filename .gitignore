@@ -16,6 +16,9 @@ build/
 publish/
 out/
 .git-codex-blocked/
+.git-codex-current/
+.git-codex-objects/
+.codex-temp-index
 
 # Local environment files
 .env
